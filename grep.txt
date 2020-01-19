@@ -1,0 +1,3 @@
+#delete comments from file
+grep -v '^#' /etc/file.txt | grep -v '^$' > /etc/file2.txt
+#-------------------------------------------------------------
