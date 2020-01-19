@@ -1,0 +1,1 @@
+curl --interface eth0 2ip.ru
