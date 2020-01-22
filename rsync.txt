@@ -1,0 +1,2 @@
+rsync -auHxv --numeric-ids --exclude=/etc/fstab --exclude=/etc/network/* --exclude=/proc/* --exclude=/tmp/* --exclude=/sys/* --exclude=/dev/* --exclude=/mnt/* --exclude=/boot/* --exclude=/root/* root@51.79.20.200:/* ./
+

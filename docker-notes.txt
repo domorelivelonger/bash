@@ -1,0 +1,64 @@
+# delete unused images
+docker rmi $(docker images -a -q) &
+-----------------------------------------------
+#docker with git files update
+/usr/bin/inotifywait -qqr --exclude \.git /root/app/ | builtin cd /root/app/ && docker restart app &
+sleep 5
+cd /root/app &&  git pull origin master &
+sleep 15
+
+# log to file 
+docker logs app >& /root/logs/app.txt
+
+# rebuild without swarm
+docker-compose --compatibility up -d
+docker-compose up -d --force-recreate --build
+-----------------------------------------------
+
+docker port forwarding
+iptables -t nat -A DOCKER -p tcp --dport 5432 -j DNAT --to-destination 172.17.0.5:5432
+iptables -t nat -A POSTROUTING -j MASQUERADE -p tcp --source 172.17.0.5 --destination 172.17.0.5 --dport 5432
+iptables -A DOCKER -j ACCEPT -p tcp --destination 172.17.0.5 --dport 5432
+
+
+#---
+#nodejs example
+version: '3'
+services:
+  app-nodejs:
+    container_name: app-nodejs
+    build: .
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3003:3003
+    command: npm start
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 250M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+#------
+#docker git
+#!/bin/bash
+echo "First arg: $1"
+cd $1
+bob="Already up-to-date."
+echo $bob
+echo $(git pull) > s.txt
+cat s.txt
+if [ "$(cat s.txt)" == "$bob" ]
+then
+echo "up"
+else
+echo "not up"
+/usr/bin/docker restart app
+fi
+rm -rf st.txt
+
+#----

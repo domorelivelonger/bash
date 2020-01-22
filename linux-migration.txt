@@ -1,0 +1,19 @@
+sudo rsync -ahPHAXx --delete --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/mnt/*,/media/*,/lost+found} / /mnt
+Then I reset my /mnt/etc/fstab file for the boot partition and my swap space.
+
+Then I needed to reset GRUB
+
+for i in /dev /dev/pts /proc /sys /run; do sudo mount -B $i /mnt$i; done
+sudo chroot /mnt
+sudo grub-install --recheck /dev/sdX
+sudo update-grub
+
+
+rsync -xrlptgoEv --progress -e ssh --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/mnt/*,/media/*,/lost+found} / root@0.0.0.0:/
+
+
+
+rsync -xrlptgoEv --progress -e ssh --exclude={/root/*,/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/mnt/*,/media/*,/lost+found} / /root/ba
+
+rsync -xrlptgoEv --progress -e ssh --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/mnt/*,/media/*,/lost+found} /mnt/* root@0.0.0.0:/mnt/
+

@@ -1,0 +1,45 @@
+#delete all data on disk
+shred -v -n1 -z /dev/sda1
+------------------------------------
+# change root password from rc.local or bash script
+echo "linuxpassword" | passwd --stdin linuxuser
+------------------------------------
+#chmod 755 and 644
+
+find ./ -type d -print0 | xargs -0 chmod 0755
+find ./ -type f -print0 | xargs -0 chmod 0644
+
+find /var/www -type d -exec chmod 755 {} \;
+find /var/www -type f -exec chmod 644 {} \;
+
+------------------------------------
+#disable ipv6
+
+echo "net.ipv6.conf.all.disable_ipv6 = 1" >> /etc/sysctl.conf
+echo "net.ipv6.conf.default.disable_ipv6 = 1" >> /etc/sysctl.conf
+echo "net.ipv6.conf.lo.disable_ipv6 = 1" >> /etc/sysctl.conf
+sysctl -p
+------------------------------------
+#swap
+#fallocate -l 1G /swapfile
+dd if=/dev/zero of=/swapfile bs=2M count=1024
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+#nano /etc/fstab
+echo "/swapfile   swap    swap    sw  0   0" >> /etc/fstab
+echo "vm.swappiness = 10" >> /etc/sysctl.conf
+sysctl -p
+free -m
+------------------------------------
+grep 'old.domain' -rl | xargs sed -i 's/old.domain/new.domain/g'
+------------------------------------
+cat 1.sql | sed "s/utf8mb4/utf8/g" > 2.sql
+cat 2.sql | sed "s/unicode_520/general/g" > 3.sql
+------------------------------------
+
+ps -aux
+man ps
+pwdx PID
+lsof -p PID | grep cwd
+

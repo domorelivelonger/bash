@@ -1,0 +1,100 @@
+#cat /etc/config/network
+config interface 'lan'
+        option type 'bridge'
+        option ifname 'eth1'
+        option proto 'static'
+        option ipaddr '192.168.1.1'
+        option netmask '255.255.255.0'
+        option delegate '0'
+
+config interface 'wan'
+        option proto 'static'
+        option type 'bridge'
+        option ifname 'eth0 eth0.10'
+        option ipaddr '255.255.255.10'
+        option netmask '255.255.240.0'
+        option gateway '255.255.255.1'
+        option ip6addr '0000:0000:0000:0000:0000:0000:0000/64'
+        option ip6gw '0000:0000:0000:0000:0000:0000:0000:0001'
+        list dns '8.8.8.8'
+        list dns '0000:0000:0000:0000:0000:0000:0000:0001'
+        option stp '1'
+
+
+
+
+#squid.conf for Openwrt 18.04.6 x86-x64
+# create directory /log and file /log/squid.log
+
+
+
+#uncoment for enable ipv4 to proxy users
+#auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/passwords
+#auth_param basic realm Anarchy
+#acl authenticated proxy_auth REQUIRED
+#http_access allow authenticated
+
+
+http_access allow localhost manager
+http_access deny manager
+http_access allow localhost
+http_port 5128
+coredump_dir /srv/squid
+
+dns_v4_first off
+acl to_ipv6 dst ipv6
+http_access deny !to_ipv6
+http_access allow to_ipv6
+
+
+acl from_port5128 myportname port5128
+tcp_outgoing_address 2a01:b0c0:1:d0::5f0c:f000 from_port5128
+tcp_outgoing_address 2a01:b0c0:1:d0::5f0c:f000 !all
+
+
+#acl to_ipv6 dst ipv6
+#http_access deny !to_ipv6
+
+auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/passwords
+auth_param basic realm Anarchy
+acl authenticated proxy_auth REQUIRED
+http_access allow authenticated
+
+
+forwarded_for off
+#forwarded_for delete
+via off
+follow_x_forwarded_for deny all
+request_header_access X-Forwarded-For deny all
+request_header_access From deny all
+request_header_access Referer deny all
+request_header_access User-Agent deny all
+request_header_access Authorization allow all
+request_header_access Proxy-Authorization allow all
+request_header_access Cache-Control allow all
+request_header_access Content-Length allow all
+request_header_access Content-Type allow all
+request_header_access Date allow all
+request_header_access Host allow all
+request_header_access If-Modified-Since allow all
+request_header_access Pragma allow all
+request_header_access Accept allow all
+request_header_access Accept-Charset allow all
+request_header_access Accept-Encoding allow all
+request_header_access Accept-Language allow all
+request_header_access Connection allow all
+request_header_access All deny all
+
+
+refresh_pattern ^ftp: 1440 20% 10080
+refresh_pattern ^gopher: 1440 0% 1440
+refresh_pattern -i (/cgi-bin/|\?) 0 0% 0
+refresh_pattern . 0 20% 4320
+
+access_log none
+cache_log /dev/null
+cache_store_log stdio:/dev/null
+logfile_rotate 0
+
+logfile_daemon /log/squid.log
+

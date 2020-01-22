@@ -1,0 +1,31 @@
+#!/bin/bash
+DOMAINLIST="/root/domains.txt"
+MAIL="/usr/bin/mail"
+EMAILS="domorelivelonger@gmail.com"
+OLDLOG="/root/monitordns.OLD"
+NEWLOG="/root/monitordns.CURRENT"
+TEMPLOG="/root/monitordns.$$"
+
+echo> $OLDLOG
+mv $NEWLOG $OLDLOG
+
+while read line
+do
+
+echo "Checking $line:" | tee -a $NEWLOG
+#dig +nocomments $line ANY | grep -v ";" | grep -v "^$" | awk '{ $2=""; print "'$line': "$0; }' | sort | tee -a $NEWLOG
+dig +nocomments $line NS | grep -v ";" | grep -v "^$" | awk '{ $2=""; print "'$line': "$0; }' | sort | tee -a $NEWLOG
+
+echo "" | tee -a $NEWLOG
+done < $DOMAINLIST
+echo "-------------------------------------------------------------"
+diff -y --suppress-common-lines $OLDLOG $NEWLOG > $TEMPLOG
+
+if [ -s $TEMPLOG ] ; then
+  for EMAIL in $EMAILS
+  do
+    $MAIL -s "DNS status update" $EMAIL < $TEMPLOG
+  done
+fi
+rm -f $TEMPLOG
+

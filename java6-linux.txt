@@ -1,0 +1,13 @@
+0. Use on your own responsibility.
+0. Method 1.
+1. Download file jdk-6u45-linux-x64.bin
+2. Move jdk-6u45-linux-x64.bin to /var/cache/oracle-jdk6-installer/ location
+3. Download file oracle-java6-installer_6u45-0~webupd8~8_all.deb
+4. sudo dpkg -i oracle-java6-installer_6u45-0~webupd8~8_all.deb
+
+0. Method 2.
+1. Download file jdk-6u45-linux-x64.bin
+2. Move jdk-6u45-linux-x64.bin to /var/cache/oracle-jdk6-installer/ location
+3. sudo add-apt-repository ppa:webupd8team/java
+4. sudo apt-get update
+5. sudo apt-get install oracle-java6-installer
