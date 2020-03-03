@@ -1,8 +1,5 @@
 #!/bin/bash
-# Copyright
-# Boris O. Baktashev
-# http://kak-podnyat-proksi-ipv6.ru
-# 2016
+
 
 
 ipv4=100.100.100.100
