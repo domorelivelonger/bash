@@ -24,3 +24,28 @@ mount -o noatime /dev/vgramdisk/ramstorage /mnt/ramstorage
 sleep 10
 echo "ramstorage created"
 
+
+
+
+----
+Deployment script:
+---------------------------------------
+
+#!/bin/bash
+#stop all
+echo "shutting down ct, if any"
+pct stop 999
+sleep 5
+
+#remove old
+echo "removing old ct, if any"
+pct destroy 999
+sleep 5
+
+#deploy ct 999
+new999=$(ls /var/lib/vz/dump/vzdump-lxc-999*.lzo | awk '{ print $1 }')
+new999file=$(basename $new999)
+pct restore 999 local/"$new999file" --storage ramstorage --force
+echo "-----RESTORE DONE 999-----"
+pct start 999
+echo "-----CT 999 STARTED -----"
