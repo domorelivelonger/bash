@@ -2,7 +2,7 @@ Create ramdrive script
 -------------------------------------
 
 #!/bin/bash
-
+mkdir -p /mnt/ramstorage
 #probe the device
 modprobe brd rd_size=22000000
 
