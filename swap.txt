@@ -10,7 +10,7 @@ grep -q "swapfile" /etc/fstab
 if [ $? -ne 0 ]; then
   echo 'swapfile not found. Adding swapfile.'
   fallocate -l ${swapsize}M /swapfile
-  dd if=/dev/zero of=/swap count=${swapsize}M bs=1MiB
+  dd if=/dev/zero of=/swapfile count=$swapsize bs=1MiB
   chmod 600 /swapfile
   mkswap /swapfile
   swapon /swapfile
