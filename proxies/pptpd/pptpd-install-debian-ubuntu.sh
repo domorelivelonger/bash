@@ -55,10 +55,9 @@ EOF
 sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
 sysctl -p
 
-iptables-save > /etc/iptables.down.rules
 
-iptables -t nat -A POSTROUTING -s 10.0.0.0/8 -j MASQUERADE
-#iptables -I FORWARD -p tcp --syn -i ppp+ -j TCPMSS --set-mss 1300
+iptables -t nat -A POSTROUTING -s 10.10.10.10/8 -j MASQUERADE
+iptables -I FORWARD -p tcp --syn -i ppp+ -j TCPMSS --set-mss 1300
 
 iptables-save > /etc/iptables.up.rules
 
@@ -75,6 +74,6 @@ sysctl -p
 iptables -I INPUT -p tcp --dport 1723 -m state --state NEW -j ACCEPT
 iptables -I INPUT -p gre -j ACCEPT
 iptables -t nat -I POSTROUTING -o eth0 -j MASQUERADE
-iptables -I FORWARD -p tcp --tcp-flags SYN,RST SYN -s 10.0.0.0/24 -j TCPMSS  --clamp-mss-to-pmtu
-
+iptables -I FORWARD -p tcp --tcp-flags SYN,RST SYN -s 10.10.10.10/24 -j TCPMSS  --clamp-mss-to-pmtu
+iptables -I INPUT -s 10.10.10.0/24 -i ppp0 -j ACCEPT
 iptables-save > /etc/iptables.up.rules
