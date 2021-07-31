@@ -4,8 +4,6 @@ apt install pptpd ppp iptables iproute2 -y && \
     echo 'pidfile /var/run/pptpd.pid' >> /etc/pptpd.conf && \
     echo 'localip 192.168.47.1' >> /etc/pptpd.conf && \
     echo 'remoteip 192.168.47.100-199' >> /etc/pptpd.conf && \
-    echo 'ms-dns 8.8.8.8\nms-dns 8.8.4.4' >> /etc/ppp/pptpd-options && \
-    echo 'nameserver 8.8.8.8\nameserver 8.8.4.4' > /etc/resolv.conf  && \
     echo 'name pptpd' > /etc/ppp/pptpd-options && \
     echo 'refuse-pap' >> /etc/ppp/pptpd-options && \
     echo 'refuse-chap' >> /etc/ppp/pptpd-options && \
@@ -20,6 +18,11 @@ apt install pptpd ppp iptables iproute2 -y && \
     echo 'novjccomp' >> /etc/ppp/pptpd-options && \
     echo 'nologfd' >> /etc/ppp/pptpd-options
 
+rm -rf /etc/resolv.conf
+echo 'nameserver 8.8.8.8' > /etc/resolv.conf
+echo 'nameserver 8.8.4.4' >> /etc/resolv.conf
+echo 'nameserver 2001:4860:4860::8888' >> /etc/resolv.conf
+echo 'nameserver 2001:4860:4860::8844' >> /etc/resolv.conf
 
 echo 'test * test *' > /etc/ppp/chap-secrets
 
