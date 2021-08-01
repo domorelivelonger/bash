@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/bin/bashPATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+export PATH
+clear
+
 echo "PPTPD SERVER INSTALLATION"
 
 apt install pptpd ppp iptables iproute2 -y && \
