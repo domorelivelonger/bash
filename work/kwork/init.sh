@@ -94,14 +94,14 @@ apt clean
 EOF
 
 
-
+ssh $SSH_OPTIONS root@$IP <<EOF
 sed -i 's/DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/g' /etc/default/ufw
 sed -i 's%*filter%*filter\n-A ufw-before-input -p 47 -j ACCEPT%g' /etc/ufw/before.rules
 sed -i 's%*filter%*filter\n-A ufw-before-output -p 47 -j ACCEPT%g' /etc/ufw/before.rules
 sed -i 's%# drop INVALID packets (logs these in loglevel medium and higher)%# drop INVALID packets (logs these in loglevel medium and higher)\n-A ufw-before-input -p 47 -j ACCEPT%g' /etc/ufw/before.rules
 sed -i "s%# Don't delete these required lines, otherwise there will be errors%# Don't delete these required lines, otherwise there will be errors\n*nat%g" /etc/ufw/before.rules
 sed -i 's%*nat%*nat \n:POSTROUTING ACCEPT [0:0]\n-A POSTROUTING -o eth0 -j MASQUERADE\nCOMMIT\n%g' /etc/ufw/before.rules
-
+EOF
 
 
 
