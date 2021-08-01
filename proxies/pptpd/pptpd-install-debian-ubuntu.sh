@@ -1,4 +1,6 @@
 #!/bin/bash
+echo "PPTPD SERVER INSTALLATION"
+
 apt install pptpd ppp iptables iproute2 -y && \
     echo 'option /etc/ppp/pptpd-options' > /etc/pptpd.conf && \
     echo 'pidfile /var/run/pptpd.pid' >> /etc/pptpd.conf && \
@@ -28,6 +30,17 @@ echo 'test * test *' > /etc/ppp/chap-secrets
 
 sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
 sysctl -p
+
+echo "Clear all iptables rules"
+echo "history" >> etc/iptables.up.rules.old
+iptables-save >> /etc/iptables.up.rules.old
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -t nat -F
+iptables -t mangle -F
+iptables -F
+iptables -X
 
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 iptables -I INPUT -p gre -j ACCEPT
