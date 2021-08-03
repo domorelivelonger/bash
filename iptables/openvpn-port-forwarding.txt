@@ -1,0 +1,13 @@
+#Iptables rules for port forwarding
+#OPenvpn installed on Digitalocean from Marketplace
+#vpn client private ip - 10.30.30.30
+# vpn client local port: 2112
+# vpn server public port - 4444, which will be forwarded to 10.30.30.30:2112
+iptables --table nat --append PREROUTING --protocol tcp --dport 4444  --jump DNAT --to-destination 10.30.30.30:2112
+iptables --table filter --insert FORWARD 3 --protocol tcp --destination 10.30.30.30 --jump ACCEPT
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+#enabling internet forwarding
+sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
+sed -i 's/#net.ipv6.conf.all.forwarding=1/net.ipv6.conf.all.forwarding=1/g' /etc/sysctl.conf
+sysctl -p
