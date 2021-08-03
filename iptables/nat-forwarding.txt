@@ -1,0 +1,4 @@
+#Nat port forwarding
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 2222 -j DNAT --to 192.168.47.2:22
+iptables -t nat -A POSTROUTING -o ppp0 -d 192.168.47.2 -p tcp --dport 22 -j MASQUERADE
+#---------------------------------------------------------------------------
