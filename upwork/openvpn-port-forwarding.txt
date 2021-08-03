@@ -13,7 +13,7 @@ iptables --table nat --append PREROUTING --protocol tcp --dport 2222  --jump DNA
 
 
 
-#4. commands from you: time select
+#5. commands from you: time select
 dpkg-reconfigure tzdata
-#5. packages  cache updateaand distribution upgrade
+#6. packages  cache update and distribution upgrade
 sudo apt-get update && time sudo apt-get dist-upgrade
