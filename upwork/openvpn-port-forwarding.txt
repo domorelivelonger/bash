@@ -1,0 +1,19 @@
+#1. Add traffic ipv4 forwarding (from internet to vpn) rule to sysctl config file.
+sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
+#2. Add traffic ipv6 forwarding (from internet to vpn) rule to sysctl config file.
+sed -i 's/#net.ipv6.conf.all.forwarding=1/net.ipv6.conf.all.forwarding=1/g' /etc/sysctl.conf
+#3. Enable sysctl rules
+sysctl -p
+#4. iptables rule for enable internet sharing from public interface (eth0)
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+#5. iptables rule for allow forwarding to vpn client ip
+iptables --table filter --insert FORWARD 3 --protocol tcp --destination 10.30.30.30 --jump ACCEPT
+#6.iptables port forwarding rule
+iptables --table nat --append PREROUTING --protocol tcp --dport 2222  --jump DNAT --to-destination 10.30.30.30:22
+
+
+
+#4. commands from you: time select
+dpkg-reconfigure tzdata
+#5. packages  cache updateaand distribution upgrade
+sudo apt-get update && time sudo apt-get dist-upgrade
