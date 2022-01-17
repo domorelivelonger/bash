@@ -48,3 +48,8 @@ lsof -p PID | grep cwd
 find . ! -empty -type f -exec md5sum {} + | sort | uniq -w32 -dD > list-duplicates.txt
 ------------------------------------
 curl https://ipinfo.io/104.80.62.56
+-------
+
+ulimit -S -s unlimited
+Argument list too long
+---
